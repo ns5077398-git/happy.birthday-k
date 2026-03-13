@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Happy Birthday My Love 💖</title>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+
+body{
+margin:0;
+font-family:Poppins,sans-serif;
+color:white;
+background:black;
+overflow-x:hidden;
+}
+
+/* INTRO VIDEO */
+
+#intro{
+position:relative;
+overflow:hidden;
+}
+
+#bg-video{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+z-index:-2;
+}
+
+.overlay{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.45);
+z-index:-1;
+}
+
+/* PAGES */
+
+.page{
+display:none;
+min-height:100vh;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+text-align:center;
+padding:30px;
+}
+
+.page.active{
+display:flex;
+}
+
+/* TITLE */
+
+.title{
+font-size:clamp(32px,8vw,60px);
+text-shadow:0 0 20px hotpink;
+}
+
+/* GLOW TITLE */
+
+.glow{
+animation:glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow{
+from{ text-shadow:0 0 10px hotpink; }
+to{ text-shadow:0 0 30px #ff4da6,0 0 50px #ff1a8c; }
+}
+
+/* INTRO TEXT */
+
+.intro-text{
+margin-top:15px;
+font-size:clamp(16px,4vw,22px);
+opacity:0.9;
+}
+
+/* GIF */
+
+.gif{
+margin-top:20px;
+width:min(260px,80%);
+border-radius:15px;
+box-shadow:0 0 20px pink;
+}
+
+/* BUTTON */
+
+.magic-btn{
+background:linear-gradient(135deg,#ff2f92,#ff7ac8);
+border:none;
+padding:15px 40px;
+border-radius:40px;
+font-size:18px;
+color:white;
+cursor:pointer;
+margin-top:30px;
+transition:.3s;
+}
+
+.magic-btn:hover{
+transform:scale(1.1);
+}
+
+/* BUTTON PULSE */
+
+.pulse{
+animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+0%{transform:scale(1)}
+50%{transform:scale(1.1)}
+100%{transform:scale(1)}
+}
+
+/* MESSAGE */
+
+.message{
+max-width:750px;
+font-size:clamp(16px,4vw,22px);
+line-height:1.7;
+margin-top:20px;
+}
+
+/* COUNTDOWN */
+
+#count{
+font-size:clamp(60px,15vw,120px);
+}
+
+/* GALLERY */
+
+.gallery{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:30px;
+max-width:1000px;
+margin-top:40px;
+}
+
+.photo-card{
+position:relative;
+border-radius:18px;
+overflow:hidden;
+cursor:pointer;
+box-shadow:0 10px 30px rgba(255,0,120,0.3);
+transition:0.4s;
+}
+
+.photo-card:hover{
+transform:translateY(-10px);
+box-shadow:0 15px 40px rgba(255,0,150,0.6);
+}
+
+.photo-card img{
+width:100%;
+height:100%;
+object-fit:cover;
+transition:0.6s;
+}
+
+.photo-card:hover img{
+transform:scale(1.1);
+}
+
+.photo-message{
+position:absolute;
+bottom:0;
+left:0;
+right:0;
+padding:20px;
+font-size:18px;
+background:linear-gradient(transparent,rgba(0,0,0,0.9));
+opacity:0;
+transform:translateY(40px);
+transition:0.5s;
+}
+
+.photo-card:hover .photo-message{
+opacity:1;
+transform:translateY(0);
+}
+
+/* GLASS CARD */
+
+.glass-card{
+width:650px;
+max-width:95%;
+padding:25px;
+border-radius:20px;
+background:rgba(255,255,255,0.15);
+backdrop-filter:blur(12px);
+box-shadow:0 10px 40px rgba(0,0,0,0.6);
+opacity:0;
+transform:scale(0.8);
+transition:0.8s;
+}
+
+.glass-card.show{
+opacity:1;
+transform:scale(1);
+}
+
+.glass-text{
+font-size:clamp(16px,4vw,20px);
+line-height:1.8;
+white-space:pre-line;
+}
+
+/* HEARTS */
+
+.heart{
+position:fixed;
+bottom:-10px;
+font-size:22px;
+animation:float 6s linear infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(0);opacity:1}
+100%{transform:translateY(-100vh);opacity:0}
+}
+
+/* MOBILE */
+
+@media (max-width:600px){
+
+.page{padding:20px;}
+
+.gallery{
+grid-template-columns:1fr;
+gap:20px;
+}
+
+.magic-btn{
+padding:12px 25px;
+font-size:16px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- INTRO PAGE -->
+
+<div id="intro" class="page active">
+
+<video autoplay muted loop id="bg-video">
+<source src="51844-466374484_medium.mp4" type="video/mp4">
+</video>
+
+<div class="overlay"></div>
+
+<h1 class="title glow">A Special Surprise 💖</h1>
+
+<p class="intro-text">
+Something beautiful is waiting for you ✨  
+A little surprise made with love ❤️
+</p>
+
+<img src="pandas.gif" class="gif">
+
+<button class="magic-btn pulse" onclick="start()">Start The Surprise ✨</button>
+
+</div>
+
+<!-- COUNTDOWN -->
+
+<div id="countdownPage" class="page">
+<h1>Get Ready 🎂  
+Something special is waiting for you, K🤍</h1>
+<div id="count">3</div>
+</div>
+
+<!-- PAGE 1 -->
+
+<div id="page1" class="page">
+
+<h1 class="title">Happy Birthday My Love ❤️</h1>
+
+<p class="message">
+From the moment you came into my life  
+everything became beautiful.
+
+Your smile makes my world brighter  
+every single day 💖
+</p>
+
+<img src="yellow.gif" class="gif">
+
+<button class="magic-btn" onclick="goToPage(2)">
+Our Story ✨
+</button>
+
+</div>
+
+<!-- PAGE 2 -->
+
+<div id="page2" class="page">
+
+<h1 class="title">How We Met ✨</h1>
+
+<p class="message">
+Sach kahu to ek secret hai jo shayad tumhe aaj tak pata nahi tha…
+
+Jab maine tumhe pehli baar dekha tha,
+tab tum mujhe jaante bhi nahi the.
+
+Par us din se hi pata nahi kyun
+tum mujhe achhe lagne lage the.
+
+Dheere dheere bina tumhe bataye
+main tumse pyaar karne lagi.
+
+Aur aaj socha,
+ye chhota sa secret tumhe bata hi du. ❤️🥰
+</p>
+
+<img src="teddy.gif" class="gif">
+
+<button class="magic-btn" onclick="goToPage(3)">
+Ek Chhota Sa Surprise 🎁
+</button>
+
+</div>
+
+<!-- PAGE 3 -->
+
+<div id="page3" class="page">
+
+<h1 class="title">Things I Love About You 💖</h1>
+
+<p class="message">
+Tumhari sabse achchi baat mujhe yeh lagti hai ki
+aaj tak tumne mera bharosa kabhi nahi toda.
+Aur shayad isi liye tum mere liye aur bhi special ho. ❤️
+</p>
+
+<img src="heartss.gif" class="gif">
+
+<button class="magic-btn" onclick="goToPage(4)">
+Our Photos 📸
+</button>
+
+</div>
+
+<!-- PHOTO PAGE -->
+
+<div id="page4" class="page">
+
+<h1 class="title">Our Beautiful Memories 📸</h1>
+
+<div class="gallery">
+
+<div class="photo-card">
+<img src="cute.jpg">
+<div class="photo-message">💖 Kabhi kabhi kuch tasveerein bas
+dil ki feelings ko bayaan kar deti hain. ❤️</div>
+</div>
+
+<div class="photo-card">
+<img src="hand.jpg">
+<div class="photo-message">🤍 Yeh photo dekhkar bas ek hi khayal aata hai…
+kaash hum bhi aise hi saath ho. 🥰</div>
+</div>
+
+<div class="photo-card">
+<img src="handsome.png">
+<div class="photo-message"> Pyaar shayad aisa hi hota hai…
+simple, cute aur dil ko sukoon dene wala. ✨</div>
+</div>
+
+<div class="photo-card">
+<img src="pink.jpg">
+<div class="photo-message">Kuch moments sirf tasveeron mein nahi,
+khwabon mein bhi jeene ka mann karta hai. 💖</div>
+</div>
+
+<div class="photo-card">
+<img src="HUG2.jpg">
+<div class="photo-message">🌸 Har romantic photo dekhkar
+tumhari yaad aur zyada aati hai. ❤️😊</div>
+</div>
+<div class="photo-card">
+<img src="HEART.jpg">
+<div class="photo-message">Shayad ek din hum bhi
+aisi hi pyari memories banayenge. 🫶✨</div>
+</div>
+</div>
+
+<button class="magic-btn" onclick="goToPage(5)">
+Final Surprise 💌
+</button>
+
+</div>
+
+<!-- FINAL MESSAGE -->
+
+<div id="page5" class="page">
+
+<h1 class="title">A Message For You 💖</h1>
+
+<div id="glassCard" class="glass-card">
+<div id="text" class="glass-text"></div>
+</div>
+
+</div>
+
+<script>
+
+function start(){
+document.getElementById("intro").classList.remove("active");
+document.getElementById("countdownPage").classList.add("active");
+startCountdown();
+}
+
+function startCountdown(){
+
+let c=3;
+const counter=document.getElementById("count");
+
+const t=setInterval(()=>{
+
+c--;
+counter.innerText=c;
+
+if(c==0){
+
+clearInterval(t);
+counter.innerText="🎉";
+confetti({particleCount:200,spread:90});
+setTimeout(()=>goToPage(1),1200);
+
+}
+
+},1000);
+}
+
+function goToPage(p){
+
+document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+document.getElementById("page"+p).classList.add("active");
+
+if(p===5){
+showCard();
+}
+
+}
+
+function showCard(){
+
+const card=document.getElementById("glassCard");
+
+setTimeout(()=>{
+card.classList.add("show");
+typeWriter();
+},400);
+
+}
+
+const message=`My Love ❤️
+
+You are the most special person in my life.
+
+Shayad mujhe pata hai ki tumse mujhe kabhi waisa pyaar nahi milega jaisa main chahti hoon.
+Phir bhi pata nahi kyun, main tumhe kabhi chhod kar nahi ja paayi.
+
+Jab tak meri himmat aur meri feelings saath denge, tab tak main tumhe apni life mein sambhal kar rakhungi.
+
+Ho sakta hai tumhe mujhse milkar utna achha na laga ho…
+Par mujhe tumse milkar sach mein achha laga tha.
+
+Kabhi-kabhi bas yahi sochti hoon…
+Shayad agar hum kabhi mile hi na hote, to dil itna uljhta bhi nahi…
+Aur shayad sab kuch thoda aasaan hota.
+
+Forever yours 💖`;
+
+let i=0;
+
+function typeWriter(){
+
+if(i<message.length){
+
+document.getElementById("text").innerHTML+=message.charAt(i);
+i++;
+
+setTimeout(typeWriter,40);
+
+}
+
+}
+
+function hearts(){
+
+const heart=document.createElement("div");
+heart.className="heart";
+heart.innerHTML="💖";
+heart.style.left=Math.random()*100+"vw";
+heart.style.fontSize=(20+Math.random()*20)+"px";
+
+document.body.appendChild(heart);
+
+setTimeout(()=>heart.remove(),6000);
+
+}
+
+setInterval(hearts,400);
+
+</script>
+
+</body>
+</html>
